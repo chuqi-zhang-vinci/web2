@@ -1,0 +1,18 @@
+### add a film
+@baseurl = http://localhost:3000
+
+POST {{baseurl}}/films
+Content-Type: application/json
+
+{
+    "title":"Oppenheimer",
+    "duration": 180,
+    "budget": 100,
+    "link":"https://en.wikipedia.org/wiki/Oppenheimer_(film)"
+}
+
+### Read all pizzas with File variable
+GET {{baseurl}}/films
+
+###
+GET {{baseurl}}/films?minimum-duration=150
