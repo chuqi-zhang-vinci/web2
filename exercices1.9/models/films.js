@@ -3,8 +3,35 @@ const { parse, serialize } = require('../utils/json');
 
 const jsonDbPath = path.join(__dirname, '/../data/films.json');
 
+const defaultFilms = 
+[
+    {
+        id : 1,
+        title : "The Shawshank Redemption",
+        duration : 142,
+        budget : 10,
+        link : "https://www.moviemeter.nl/film/273",
+    },
+
+    {
+        id : 2,
+        title : "The Godfather",
+        duration : 175,
+        budget : 11,
+        link : "https://www.moviemeter.nl/film/320",
+    },
+    
+    {
+        id : 3,
+        title : "The Godfather: Part II",
+        duration : 202, 
+        budget : 15,
+        link : "https://www.moviemeter.nl/film/321",
+    }
+];
+
 function readAllFilms(minimumDuration) {
-  const films = parse(jsonDbPath);
+  const films = parse(jsonDbPath, defaultFilms);
 
   if (minimumDuration === undefined) return films;
 
@@ -17,7 +44,7 @@ function readAllFilms(minimumDuration) {
 
 function readOneFilm(id) {
   const idAsNumber = Number(id);
-  const films = parse(jsonDbPath);
+  const films = parse(jsonDbPath, defaultFilms);
   const indexOfFilmFound = films.findIndex((pizza) => pizza.id === idAsNumber);
   if (indexOfFilmFound < 0) return undefined;
 
@@ -25,9 +52,9 @@ function readOneFilm(id) {
 }
 
 function createOneFilm(title, link, duration, budget) {
-  const films = parse(jsonDbPath);
+  const films = parse(jsonDbPath, defaultFilms);
 
-  const createdPizza = {
+  const createdFilm = {
     id: getNextId(),
     title,
     link,
@@ -35,15 +62,15 @@ function createOneFilm(title, link, duration, budget) {
     budget,
   };
 
-  films.push(createdPizza);
+  films.push(createdFilm);
 
   serialize(jsonDbPath, films);
 
-  return createdPizza;
+  return createdFilm;
 }
 
 function getNextId() {
-  const films = parse(jsonDbPath);
+  const films = parse(jsonDbPath,  defaultFilms);
   const lastItemIndex = films?.length !== 0 ? films.length - 1 : undefined;
   if (lastItemIndex === undefined) return 1;
   const lastId = films[lastItemIndex]?.id;

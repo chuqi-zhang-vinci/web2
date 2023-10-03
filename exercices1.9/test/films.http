@@ -16,3 +16,7 @@ GET {{baseurl}}/films
 
 ###
 GET {{baseurl}}/films?minimum-duration=150
+
+###
+POST {{baseurl}}/films
+Content-Type: application/json

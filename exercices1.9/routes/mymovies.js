@@ -29,12 +29,8 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   const title = req?.body?.title?.trim()?.length !== 0 ? req.body.title : undefined;
   const link = req?.body?.content?.trim().length !== 0 ? req.body.link : undefined;
-  const duration =
-    typeof req?.body?.duration !== 'number' || req.body.duration < 0
-      ? undefined
-      : req.body.duration;
-  const budget =
-    typeof req?.body?.budget !== 'number' || req.body.budget < 0 ? undefined : req.body.budget;
+  const duration = typeof req?.body?.duration !== 'number' || req.body.duration < 0 ? undefined : req.body.duration;
+  const budget = typeof req?.body?.budget !== 'number' || req.body.budget < 0 ? undefined : req.body.budget;
 
   if (!title || !link || !duration || !budget) return res.sendStatus(400);
 
@@ -42,5 +38,10 @@ router.post('/', (req, res) => {
 
   return res.json(createdFilm);
 });
+
+
+
+
+
 
 module.exports = router;
