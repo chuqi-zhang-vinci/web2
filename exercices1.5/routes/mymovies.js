@@ -1,5 +1,8 @@
 var express = require('express');
+const {serialize, parse } = require('../utils/json');
 var router = express.Router();
+
+const jsonDbPath = __dirname + '../data/movies.json';
 
 const MENU = 
 [
@@ -34,43 +37,44 @@ router.get('/', (req, res) => {
 console.log(`GET /films/${req.query["minimum-duration"]}`);
 
 if(req.query["minimum-duration"] === undefined){
-    res.json(MENU);
+    return res.json(MENU);
 }
 
 let orderList = [];
+const films = parse(jsonDbPath, MENU);
 
-for (let films of MENU){
-    if(films.duration >= parseInt(req.query["minimum-duration"])){
+for (let film of films){
+    if(film.duration >= parseInt(req.query["minimum-duration"])){
         console.log("----------hello----------");
-        orderList.push(films);
+        orderList.push(film);
     }
 }
 
 if(req.query["minimum-duration"] < 0) return res.sendStatus(404);
 
-res.json(orderList);
-
+return res.json(orderList);
 });
 
 
 router.get('/:id', (req, res) => {
     if(req.params.id == null)
-        res.json("ca n'a pas marché");
+        return res.json("ca n'a pas marché");
     else{
         console.log("vous rentrer dans le id.");
         console.log(req.params.id);
     
         let id_cherche;
+        const films = parse(jsonDbPath, MENU);
     
-        for (let films of MENU){
-            if(films.id == parseInt(req.params.id)){
+        for (let film of films){
+            if(film.id == parseInt(req.params.id)){
                 console.log('-------------id-------------');
-                id_cherche = films;
+                id_cherche = film;
             }
         }
-        if(req.params.id < 0 || req.params.id > MENU.length)
+        if(req.params.id < 0 || req.params.id > films.length)
             return res.sendStatus(404);
-        res.json(id_cherche);
+        return res.json(id_cherche);
     }
 });
 
@@ -82,6 +86,7 @@ router.post('/', (req, res) => {
 
     console.log('-------------POST FILMS-------------');
 
+    const films = parse(jsonDbPath, MENU);
     const nextId = MENU.length + 1;
 
     const newFilm = {
@@ -92,10 +97,10 @@ router.post('/', (req, res) => {
         link : link,
     };
 
-    MENU.push(newFilm);
+    films.push(newFilm);
+    serialize(jsonDbPath, films);
 
-    res.json(newFilm);
-    res.json(MENU);
+    return res.json(newFilm);
 });
 
 
